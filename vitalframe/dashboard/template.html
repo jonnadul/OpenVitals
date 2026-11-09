@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VitalFrame</title>
+<style>
+:root{
+  --bg:#f2f2f7; --panel:#ffffff; --line:#e5e5ea; --text:#1c1c1e; --dim:#8e8e93;
+  --radius:14px; --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --good:#34c759; --warn:#ff9500; --bad:#ff3b30; --purple:#af52de; --indigo:#5e5ce6; --accent:#007aff;
+  --good-t:#248a3d; --warn-t:#b86b00; --bad-t:#d1271f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:6px}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:-.02em}
+.sub{color:var(--dim);font-size:13px}
+.controls{margin:14px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;background:#e9e9ee;border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--text);font:inherit;font-size:13px;padding:6px 11px;border-radius:8px;cursor:pointer}
+.seg button.on{background:#fff;box-shadow:var(--shadow);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{background:var(--panel);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.card .lab{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+.card .val{font-size:28px;font-weight:700;margin-top:6px;letter-spacing:-.02em}
+.card .unit{font-size:13px;color:var(--dim);font-weight:500;margin-left:3px}
+.card .meta{font-size:12px;color:var(--dim);margin-top:4px}
+.trend-up{color:var(--bad)} .trend-down{color:var(--good)} .trend-flat{color:var(--dim)}
+.panel{background:var(--panel);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+.panel h3{margin:0 0 12px;font-size:17px;display:flex;align-items:center;gap:8px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 16px}
+.tab{border:0;background:#e9e9ee;color:var(--text);font:inherit;font-size:13px;padding:7px 13px;border-radius:9px;cursor:pointer}
+.tab.on{background:var(--accent);color:#fff;font-weight:600}
+.section{display:none} .section.on{display:block}
+.chart{width:100%;height:170px;display:block}
+.gf-chart{height:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+.pill.good{background:rgba(52,199,89,.14);color:var(--good-t)}
+.pill.warn{background:rgba(255,149,0,.16);color:var(--warn-t)}
+.pill.alert{background:rgba(255,59,48,.14);color:var(--bad-t)}
+.pill.info{background:rgba(0,122,255,.12);color:var(--accent)}
+.insight{border-radius:12px;padding:11px 13px;margin-bottom:8px;font-size:14px;display:flex;gap:9px;align-items:flex-start}
+.insight.good{background:rgba(52,199,89,.10)} .insight.warn{background:rgba(255,149,0,.12)}
+.insight.alert{background:rgba(255,59,48,.10)} .insight.info{background:rgba(0,122,255,.08)}
+.insight .lv{font-weight:700;width:64px;flex:none;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+.insight.good .lv{color:var(--good-t)} .insight.warn .lv{color:var(--warn-t)}
+.insight.alert .lv{color:var(--bad-t)} .insight.info .lv{color:var(--accent)}
+.insight .cite{color:var(--dim);font-size:11px;margin-left:6px}
+.muted{color:var(--dim)} .row{display:flex;gap:18px;flex-wrap:wrap}
+.kpi{font-size:22px;font-weight:700} .kpi-lab{color:var(--dim);font-size:12px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tablewrap table{width:max-content;min-width:100%}
+@media(max-width:700px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:22px} .card .val{font-size:24px}
+}
+.empty{color:var(--dim);font-style:italic;padding:8px 0}
+footer{color:var(--dim);font-size:12px;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">VitalFrame</h1>
+    <span class="sub" id="sub"></span>
+  </header>
+  <div class="controls">
+    <span class="sub">Window:</span>
+    <div class="seg" id="winsel"></div>
+    <span class="sub" id="srcs"></span>
+  </div>
+
+  <div class="grid" id="metrics"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div id="panels"></div>
+
+  <footer>VitalFrame — local, private, offline. Not medical advice.</footer>
+</div>
+
+<script>
+/*__VITALFRAME_DATA__*/
+(function(){
+  const D = (typeof DATA === "string") ? JSON.parse(DATA) : DATA;
+  const M = D.meta;
+  const WINDOWS = M.windows || [7,14,30,90,365,0];
+  let WIN = (M.default_window in {} ? M.default_window : 30);
+  // localStorage window memory
+  try { const w = localStorage.getItem("vf_win"); if(w!==null) WIN = parseInt(w,10); } catch(e){}
+
+  const $ = s => document.querySelector(s);
+  const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!==undefined)e.innerHTML=h; return e; };
+  const fmt = (v,d=1) => v==null?"—":(typeof v==="number"? (isFinite(v)? v.toFixed(d): "—") : v);
+  const esc = s => (""+s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // ---- date/window helpers ----
+  function dayDiff(a,b){ // a,b are 'YYYY-MM-DD'
+    const da=new Date(a+"T00:00:00"), db=new Date(b+"T00:00:00");
+    return Math.round((db-da)/86400000);
+  }
+  function inWindow(dateStr, asOf, win){
+    if(!win) return true;
+    return dayDiff(dateStr, asOf) <= win;
+  }
+  function winPairs(pairs){ // pairs: [[date,val]]
+    return pairs.filter(p=>inWindow(p[0], M.as_of, WIN));
+  }
+
+  // ---- SVG line chart ----
+  function lineChart(pairs, opts){
+    opts = opts||{};
+    const W=900, H=170, pad=28;
+    const ps = (opts.filter? winPairs(pairs): pairs).slice();
+    if(opts.windowed!==false) ps.length = ps.length; // keep all; filtering done by caller
+    const vals = ps.map(p=>p[1]).filter(v=>isFinite(v));
+    if(!vals.length) return '<div class="empty">No data in window</div>';
+    let lo = opts.yMin!=null?opts.yMin:Math.min(...vals);
+    let hi = opts.yMax!=null?opts.yMax:Math.max(...vals);
+    if(opts.clipOutliers && vals.length>=8){
+      const med = vals.slice().sort((a,b)=>a-b)[Math.floor(vals.length/2)];
+      hi = Math.min(hi, med*2.2);
+    }
+    if(hi===lo){ hi=lo+1; }
+    const n = ps.length;
+    const x = i => pad + (n<=1?0:(i/(n-1))*(W-2*pad));
+    const y = v => H-pad - ((v-lo)/(hi-lo))*(H-2*pad);
+    let path="";
+    ps.forEach((p,i)=>{ const v=p[1]; if(!isFinite(v))return; path += (path?" L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1); });
+    const color = opts.color||"#007aff";
+    let band="";
+    if(opts.band){
+      const [bl,bh]=opts.band;
+      const yb1=y(Math.min(bh,hi)), yb2=y(Math.max(bl,lo));
+      band=`<rect x="${pad}" y="${yb1}" width="${W-2*pad}" height="${Math.max(0,yb2-yb1)}" fill="rgba(52,199,89,.10)"/>`;
+      if(bh<hi) band+=`<text x="${pad+4}" y="${yb1+12}" fill="#248a3d" font-size="11">Target</text>`;
+    }
+    const grid=`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#e5e5ea"/>`;
+    const yl=`<text x="4" y="${pad-8}" fill="#8e8e93" font-size="11">${fmt(hi,0)}</text><text x="4" y="${H-pad+14}" fill="#8e8e93" font-size="11">${fmt(lo,0)}</text>`;
+    return `<svg class="chart${opts.extraClass?' '+opts.extraClass:''}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${band}${grid}<path d="${path}" fill="none" stroke="${color}" stroke-width="2"/>${yl}</svg>`;
+  }
+
+  // ---- metrics cards ----
+  function renderMetrics(){
+    const c=$("#metrics"); c.innerHTML="";
+    (D.metrics||[]).forEach(m=>{
+      const ps = winPairs(m.series);
+      const latest = ps.length? ps[ps.length-1][1] : m.latest;
+      const latestDate = ps.length? ps[ps.length-1][0] : m.latest_date;
+      const sl = m.slope;
+      let tcls="trend-flat", ttxt="flat";
+      if(sl!=null && isFinite(sl)){ if(Math.abs(sl)>1e-6){ if(sl>0){tcls="trend-up";ttxt="▲";}else{tcls="trend-down";ttxt="▼";} } }
+      const card=el("div","card");
+      card.innerHTML=`<div class="lab"><span class="dot"></span>${esc(m.label)}</div>
+        <div class="val">${fmt(latest)}<span class="unit">${esc(m.unit)}</span></div>
+        <div class="meta ${tcls}">${ttxt} trend · as of ${latestDate||"—"}</div>`;
+      c.appendChild(card);
+    });
+    if(!c.children.length) c.innerHTML='<div class="empty">No metrics configured.</div>';
+  }
+
+  // ---- tabs ----
+  const SECTION_DEFS = [
+    {id:"recovery", label:"Recovery"},
+    {id:"glucose", label:"Glucose"},
+    {id:"activity", label:"Activity"},
+    {id:"nutrition", label:"Nutrition"},
+    {id:"fasting", label:"Fasting"},
+    {id:"sleep", label:"Sleep"},
+    {id:"weight", label:"Weight"},
+    {id:"logs", label:"Logs"},
+    {id:"insights", label:"Insights"},
+  ];
+  function renderTabs(){
+    const t=$("#tabs"); t.innerHTML=""; const wanted = M.sections || SECTION_DEFS.map(s=>s.id);
+    SECTION_DEFS.filter(s=>wanted.includes(s.id)).forEach((s,i)=>{
+      const b=el("button","tab"+(i===0?" on":""),s.label);
+      b.onclick=()=>{ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+        document.querySelectorAll(".section").forEach(x=>x.classList.remove("on"));
+        b.classList.add("on"); $("#sec-"+s.id).classList.add("on"); };
+      t.appendChild(b);
+    });
+  }
+  function panel(id,title,h){ const p=el("div","section"+(id===(M.sections||[])[0]?" on":""),"");
+    p.id="sec-"+id; p.innerHTML=`<div class="panel"><h3>${title}</h3>${h}</div>`; return p; }
+
+  function renderPanels(){
+    const P=$("#panels"); P.innerHTML="";
+    const add=(id,title,h)=>P.appendChild(panel(id,title,h));
+
+    // Recovery
+    if((M.sections||[]).includes("recovery")){
+      const hrv=(D.metrics||[]).find(m=>m.key==="heart_rate_variability");
+      const rhr=(D.metrics||[]).find(m=>m.key==="resting_heart_rate");
+      let body='<div class="row">';
+      [hrv,rhr].forEach(m=>{ if(m){ const ps=winPairs(m.series); body+=`<div><div class="kpi-lab">${esc(m.label)}</div><div class="kpi">${fmt(ps.length?ps[ps.length-1][1]:m.latest)}<span class="muted" style="font-size:13px"> ${esc(m.unit)}</span></div></div>`; }});
+      body+='</div><div style="margin-top:10px">'+lineChart(hrv?winPairs(hrv.series):[],{color:"#af52de"})+'</div>';
+      add("recovery","Recovery",body);
+    }
+    // Glucose
+    if((M.sections||[]).includes("glucose") && D.glucose && D.glucose.has_data){
+      const g=D.glucose;
+      let body=`<div class="row" style="margin-bottom:12px">
+        <div><div class="kpi-lab">Mean</div><div class="kpi">${fmt(g.mean)}<span class="muted" style="font-size:13px"> mg/dL</span></div></div>
+        <div><div class="kpi-lab">Time in range</div><div class="kpi">${fmt(g.in_range_pct,1)}<span class="muted" style="font-size:13px"> %</span></div></div>
+        <div><div class="kpi-lab">Est. A1c</div><div class="kpi">${fmt(g.est_a1c_pct,1)}<span class="muted" style="font-size:13px"> %</span></div></div>
+        <div><div class="kpi-lab">Readings</div><div class="kpi">${fmt(g.readings)}</div></div></div>`;
+      body+=lineChart(D.glucose.readings||[],{color:"#ff9500",band:[70,180],height:200});
+      body+=`<div class="muted" style="font-size:12px;margin-top:6px">Below ${M.glucose_hypo||70}: ${fmt(g.below_pct,1)}% · Above ${M.glucose_target_high||180}: ${fmt(g.above_pct,1)}%. Estimated A1c is a math conversion of mean glucose, not a lab value.</div>`;
+      add("glucose","Glucose",body);
+    }
+    // Activity
+    if((M.sections||[]).includes("activity")){
+      add("activity","Activity", lineChart(D.steps_series||[],{color:"#007aff",clipOutliers:true}));
+    }
+    // Nutrition
+    if((M.sections||[]).includes("nutrition") && D.nutrition && D.nutrition.length){
+      let rows=D.nutrition.slice(-30).reverse().map(n=>`<tr><td>${n.day}</td><td>${fmt(n.calories,0)}</td><td>${fmt(n.protein_g,0)}</td><td>${fmt(n.carbs_g,0)}</td><td>${fmt(n.fat_g,0)}</td><td>${fmt(n.fiber_g,0)}</td></tr>`).join("");
+      add("nutrition","Nutrition",`<div class="tablewrap"><table><thead><tr><th>Day</th><th>kcal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+    }
+    // Fasting
+    if((M.sections||[]).includes("fasting") && D.fasting){
+      const f=D.fasting;
+      if(f.has_data){
+        let body=`<div class="row" style="margin-bottom:12px">
+          <div><div class="kpi-lab">Window</div><div class="kpi" style="font-size:18px">${esc(f.window)}</div></div>
+          <div><div class="kpi-lab">Adherence</div><div class="kpi">${fmt(f.adherence_pct,1)}<span class="muted" style="font-size:13px"> %</span></div></div>
+          <div><div class="kpi-lab">In window</div><div class="kpi">${fmt(f.in_window)}</div></div>
+          <div><div class="kpi-lab">Slips</div><div class="kpi">${fmt(f.slips)}</div></div>
+          <div><div class="kpi-lab">Days</div><div class="kpi">${fmt(f.coverage_days)}</div></div></div>`;
+        const rows=f.meals.slice(-25).reverse().map(m=>`<tr><td>${esc(m.ts)}</td><td>${esc(m.text)}</td><td>${m.in_window?'<span class="pill good">in window</span>':'<span class="pill alert">slip</span>'}</td></tr>`).join("");
+        body+=`<div class="tablewrap"><table><thead><tr><th>When</th><th>Meal</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+        add("fasting","Fasting",body);
+      }
+    }
+    // Sleep
+    if((M.sections||[]).includes("sleep")){
+      add("sleep","Sleep", lineChart(D.sleep_series||[],{color:"#5e5ce6",yMin:0}));
+    }
+    // Weight
+    if((M.sections||[]).includes("weight")){
+      const axis=M.weight_axis;
+      add("weight","Weight", lineChart(D.weight_series||[],{color:"#34c759",yMin:axis?axis[0]:null,yMax:axis?axis[1]:null,clipOutliers:false}));
+    }
+    // Logs (meals)
+    if((M.sections||[]).includes("logs") && D.meals && D.meals.length){
+      const rows=D.meals.slice(-40).reverse().map(m=>`<tr><td>${esc(m.ts)}</td><td>${esc(m.text)}</td><td>${m.calories?fmt(m.calories,0)+" kcal":""}</td></tr>`).join("");
+      add("logs","Logs (recent meals)",`<div class="tablewrap"><table><thead><tr><th>When</th><th>Meal</th><th>Energy</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+    }
+    // Insights
+    if((M.sections||[]).includes("insights") && D.insights){
+      const body=(D.insights.length?D.insights:[]).map(i=>`<div class="insight ${esc(i.level)}"><span class="lv">${esc(i.level)}</span><span>${esc(i.text)}${i.cite?`<span class="cite">${esc(i.cite)}</span>`:""}</span></div>`).join("");
+      add("insights","Insights", body||'<div class="empty">No insights.</div>');
+    }
+
+    // ensure first visible section matches first tab
+    const first=(M.sections||[])[0];
+    if(first){ const sec=$("#sec-"+first); if(sec) sec.classList.add("on"); }
+  }
+
+  // ---- window selector ----
+  function renderWin(){
+    const w=$("#winsel"); w.innerHTML="";
+    WINDOWS.forEach(d=>{
+      const b=el("button",(d===WIN?"on":""),(d===0?"All":d+"d"));
+      b.onclick=()=>{ WIN=d; try{localStorage.setItem("vf_win",d);}catch(e){} renderAll(); };
+      w.appendChild(b);
+    });
+  }
+  function renderAll(){ renderWin(); renderMetrics(); renderTabs(); renderPanels(); }
+
+  // boot
+  $("#title").textContent = M.title||"VitalFrame";
+  $("#sub").textContent = "as of "+M.as_of+" · "+ (M.counts?Object.values(M.counts).reduce((a,b)=>a+b,0):0) + " records";
+  $("#srcs").textContent = (M.sources&&M.sources.length)?("sources: "+M.sources.join(", ")):"";
+  renderAll();
+})();
+</script>
+</body>
+</html>

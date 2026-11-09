@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vitalframe"
+version = "0.1.0"
+description = "Self-hosted personal health-data framework: ingest from any source, store locally, analyze, and render a private offline dashboard."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "VitalFrame contributors" }]
+keywords = ["health", "quantified-self", "apple-health", "oura", "dexcom", "dashboard", "self-hosted"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "pyyaml>=6.0",
+    "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "httpx>=0.27"]
+oura = ["httpx>=0.27"]
+yazio = ["httpx>=0.27"]
+server = ["waitress>=2.1"]
+all = ["pytest>=7.0", "httpx>=0.27", "waitress>=2.1"]
+
+[project.scripts]
+vitalframe = "vitalframe.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["vitalframe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# VitalFrame runtime data — NEVER commit real health data or secrets
+data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+snapshots/
+archive/
+backups/
+.env
+.env.*
+*.secret
+config.yaml
+config.local.yaml
+secret*.json
+credentials.json
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log
+.DS_Store
+.idea/
+
+# Generated dashboard output (optional to commit a sample)
+vitalframe/dashboard/_rendered/

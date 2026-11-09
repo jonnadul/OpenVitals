@@ -1,0 +1,73 @@
+# VitalFrame sample configuration
+# Copy to config.yaml and edit. Secrets belong here or in environment variables,
+# NEVER in source control. See docs/configuration.md for the full schema.
+
+storage:
+  path: data/vitalframe.db
+
+sources:
+  # Demo data — no network, no private data. Remove for production.
+  - type: synthetic
+    name: demo
+    params:
+      days: 120
+      seed: 7
+
+  # --- Uncomment and configure real sources as needed ---
+  # - type: apple_health
+  #   name: iphone
+  #   params:
+  #     path: data/snapshots/health.jsonl   # Health Auto Export REST pushes
+  # - type: oura
+  #   name: oura
+  #   params:
+  #     token: "${OURA_TOKEN}"   # or set OURA_TOKEN env var
+  #     last_n_days: 120
+  # - type: yazio
+  #   name: yazio
+  #   params:
+  #     email: "${YAZIO_EMAIL}"
+  #     password: "${YAZIO_PASSWORD}"
+  #     last_n_days: 30
+  # - type: dexcom
+  #   name: dexcom
+  #   params:
+  #     path: data/dexcom_export.csv
+
+dashboard:
+  title: "My Health"
+  default_window: 30
+  weight_axis: [60, 90]
+  metrics:
+    - key: resting_heart_rate
+      label: Resting HR
+      unit: bpm
+      section: recovery
+    - key: heart_rate_variability
+      label: HRV
+      unit: ms
+      section: recovery
+    - key: sleep_total
+      label: Sleep
+      unit: h
+      section: sleep
+    - key: step_count
+      label: Steps
+      unit: steps
+      section: activity
+    - key: body_mass
+      label: Weight
+      unit: kg
+      section: weight
+    - key: blood_glucose
+      label: Glucose
+      unit: mg/dL
+      section: glucose
+
+analysis:
+  fast_start_hour: 9
+  fast_end_hour: 17
+  water_does_not_break_fast: true
+  glucose_hypo: 70
+  glucose_target_high: 180
+  insight_profile: diabetes_longevity

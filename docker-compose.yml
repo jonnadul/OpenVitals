@@ -1,0 +1,18 @@
+services:
+  vitalframe:
+    build: .
+    image: vitalframe:latest
+    container_name: vitalframe
+    ports:
+      - "8899:8899"
+    volumes:
+      - ./data:/app/data
+      # Mount your real config (keep secrets in env vars referenced from config.yaml)
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      # Example: expose connector tokens from host environment
+      # OURA_TOKEN: ${OURA_TOKEN}
+      # YAZIO_EMAIL: ${YAZIO_EMAIL}
+      # YAZIO_PASSWORD: ${YAZIO_PASSWORD}
+      TZ: America/Los_Angeles
+    restart: unless-stopped
