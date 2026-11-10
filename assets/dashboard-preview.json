@@ -1,0 +1,14 @@
+{
+  "synthetic_only": true,
+  "generator": "scripts/generate_dashboard_preview.py",
+  "source": "SyntheticConnector",
+  "seed": 7,
+  "days": 60,
+  "as_of": "2025-06-30",
+  "viewport": {
+    "width": 1280,
+    "height": 1000
+  },
+  "image_sha256": "9b3041f6bf006b1b74d689c802972463c020489abb22d11e5c3aa8b92c385e2b",
+  "template_sha256": "2a16786196d9c33a23fc73278b1de5334968923eb02d0ffc653358da45664c52"
+}

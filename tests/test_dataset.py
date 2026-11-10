@@ -3,11 +3,13 @@
 import json
 import os
 import tempfile
+from datetime import datetime
 
 from openvitals.config import Config, SourceConfig
 from openvitals.connectors.synthetic import SyntheticConnector
 from openvitals.analysis.build_dataset import build_dataset
 from openvitals.dashboard import render, verify_self_contained
+from openvitals.models import HealthData, Meal, Observation
 
 
 def _config():
@@ -41,6 +43,26 @@ def test_synthetic_pipeline():
     assert ds["glucose"]["has_data"]
     assert ds["fasting"]["has_data"]
     assert "insights" in ds and ds["insights"]
+
+
+def test_dashboard_receives_configured_glucose_thresholds():
+    cfg = _config()
+    cfg.analysis.glucose_hypo = 65
+    cfg.analysis.glucose_target_low = 80
+    cfg.analysis.glucose_target_high = 160
+    meta = build_dataset(_synthetic(2), cfg)["meta"]
+    assert meta["glucose_hypo"] == 65
+    assert meta["glucose_target_low"] == 80
+    assert meta["glucose_target_high"] == 160
+
+
+def test_snapshot_anchor_includes_latest_meal_timestamp():
+    data = HealthData(
+        observations=[Observation("step_count", 1000, "steps", datetime(2025, 2, 10, 12), "fixture")],
+        meals=[Meal(datetime(2025, 2, 11, 23, 30), "Synthetic supper", "fixture")],
+    )
+    ds = build_dataset(data, Config())
+    assert ds["meta"]["as_of"] == "2025-02-11"
 
 
 def test_render_self_contained():
