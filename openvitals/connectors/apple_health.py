@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Dict, Iterable, List
 
 from ..config import SourceConfig
@@ -36,8 +36,10 @@ from ..models import (
     HealthData,
     Observation,
     Workout,
+    Medication,
+    GlucoseReading,
 )
-from ..types import day_of
+from ..types import day_of, MedicationStatus
 from .base import SourceConnector
 
 
@@ -57,12 +59,50 @@ def _parse_dt(s: Any) -> datetime:
     return dt
 
 
+# HAE (Health Auto Export) emits a few metric names that differ from
+# OpenVitals' canonical names; map the common ones so analysis/dashboard don't
+# need source-specific knowledge.
+METRIC_ALIASES = {
+    "weight_body_mass": "body_mass",
+    "body_mass_index": "bmi",
+}
+GLUCOSE_METRIC = "blood_glucose"
+
+
+def _nested_qty(v):
+    if isinstance(v, dict):
+        return _num(v.get("qty"))
+    return _num(v)
+
+
+def _safe_dt(s):
+    if not s:
+        return None
+    try:
+        return _parse_dt(s)
+    except Exception:
+        return None
+
+
 def parse_payload(obj: Dict[str, Any], source: str = "apple_health") -> HealthData:
-    """Parse one HAE push object into HealthData."""
+    """Parse one HAE push object into HealthData.
+
+    Accepts both the wrapped real HAE format
+    (``{received_at, payload: {data: {metrics, workouts, medications}}}``)
+    and the flat/legacy format (metrics at the top level).
+    """
     data = HealthData()
-    metrics = obj.get("metrics") or []
-    for m in metrics:
+    payload = obj.get("payload")
+    container = payload.get("data", payload) if isinstance(payload, dict) else obj
+    if not isinstance(container, dict):
+        return data
+
+    # --- metrics (scalar observations) ---
+    for m in container.get("metrics", []) or []:
         name = m.get("name")
+        if not name:
+            continue
+        name = METRIC_ALIASES.get(name, name)
         units = m.get("units") or ""
         for pt in m.get("data", []) or []:
             try:
@@ -72,11 +112,24 @@ def parse_payload(obj: Dict[str, Any], source: str = "apple_health") -> HealthDa
             qty = pt.get("qty")
             if qty is None:
                 continue
+            try:
+                val = float(qty)
+            except (TypeError, ValueError):
+                continue
+            src = pt.get("source")
+            if not isinstance(src, str):
+                src = source
             data.observations.append(Observation(
-                metric=name, value=float(qty), unit=units,
-                timestamp=ts, source=pt.get("source") or source,
+                metric=name, value=val, unit=units,
+                timestamp=ts, source=src,
             ))
-    for w in obj.get("workouts", []) or []:
+            if name == GLUCOSE_METRIC:
+                data.glucose.append(GlucoseReading(
+                    timestamp=ts, value=val, source=src,
+                ))
+
+    # --- workouts ---
+    for w in container.get("workouts", []) or []:
         try:
             start = _parse_dt(w.get("start"))
             end = _parse_dt(w.get("end"))
@@ -84,16 +137,34 @@ def parse_payload(obj: Dict[str, Any], source: str = "apple_health") -> HealthDa
             continue
         dur = w.get("duration")
         dur_s = float(dur) if dur is not None else (end - start).total_seconds()
-        energy = w.get("activeEnergyBurned") or {}
+        energy = w.get("activeEnergyBurned") or w.get("energy") or {}
         distance = w.get("distance") or {}
         hr = w.get("heartRate") or {}
+        wsrc = w.get("source")
+        if not isinstance(wsrc, str):
+            wsrc = source
         data.workouts.append(Workout(
             start=start, end=end, duration_s=dur_s,
-            name=w.get("name") or "Workout", source=w.get("source") or source,
-            energy_kcal=_num(energy.get("qty")),
-            distance_km=_num(distance.get("qty")),
-            hr_avg=_num(hr.get("avg")),
+            name=w.get("name") or "Workout", source=wsrc,
+            energy_kcal=_nested_qty(energy.get("qty") if isinstance(energy, dict) else energy),
+            distance_km=_nested_qty(distance.get("qty") if isinstance(distance, dict) else distance),
+            hr_avg=_nested_qty(hr.get("avg") if isinstance(hr, dict) else hr),
         ))
+
+    # --- medications ---
+    for med in container.get("medications", []) or []:
+        text = med.get("displayText") or med.get("name") or "Medication"
+        status = MedicationStatus.normalize(med.get("status"))
+        start_dt = _safe_dt(med.get("start"))
+        end_dt = _safe_dt(med.get("end"))
+        anchor = start_dt or end_dt
+        sch_day = anchor.date() if anchor else date.today()
+        taken_at = end_dt if status == MedicationStatus.TAKEN else None
+        data.medications.append(Medication(
+            name=text, scheduled_day=sch_day, status=status,
+            taken_at=taken_at, source=source,
+        ))
+
     return data
 
 
