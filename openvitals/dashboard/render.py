@@ -4,10 +4,8 @@ The output is a single HTML file with no CDN, no external requests, and no
 server: the dataset JSON is embedded inline and rendered by vanilla JS. It works
 when opened directly from disk or served by any static file server.
 
-Security note: user-entered meal text is HTML-escaped before injection and the
-embedded JSON is scanned for a literal ``</script>`` (which would prematurely
-close the tag); if found, the offending data is JSON-stringified into a JS string
-rather than inlined.
+Security note: embedded JSON escapes HTML-significant characters so even mixed-case
+closing script tags remain data. Visible free text is escaped by the UI as well.
 """
 
 from __future__ import annotations
@@ -20,7 +18,9 @@ _TEMPLATE = os.path.join(os.path.dirname(__file__), "template.html")
 
 
 def _safe_json(obj: Any) -> str:
-    return json.dumps(obj, ensure_ascii=False, default=str)
+    return (json.dumps(obj, ensure_ascii=False, default=str)
+            .replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+            .replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
 
 
 def render(dataset: Dict[str, Any], out_path: str) -> str:
@@ -28,10 +28,6 @@ def render(dataset: Dict[str, Any], out_path: str) -> str:
         tpl = fh.read()
 
     data_json = _safe_json(dataset)
-    # Prevent a literal </script> in data from breaking the inline script.
-    if "</script>" in data_json:
-        data_json = json.dumps(data_json)  # wrap as a string; renderer will JSON.parse it
-
     html = tpl.replace("/*__VITALFRAME_DATA__*/", f"const DATA = {data_json};")
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     tmp = out_path + ".tmp"

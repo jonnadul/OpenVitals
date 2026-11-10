@@ -85,6 +85,9 @@ def build_dataset(data: HealthData, cfg: Config) -> Dict[str, Any]:
             "default_window": dash.default_window,
             "sections": dash.sections,
             "weight_axis": dash.weight_axis,
+            "glucose_hypo": ana.glucose_hypo,
+            "glucose_target_low": ana.glucose_target_low,
+            "glucose_target_high": ana.glucose_target_high,
             "show_ai_summary": dash.show_ai_summary,
             "counts": {
                 "observations": len(data.observations),
@@ -127,6 +130,8 @@ def _max_day(data: HealthData) -> date | None:
         days.add(g.day)
     for n in data.nutrition:
         days.add(n.day)
+    for m in data.meals:
+        days.add(m.day)
     return max(days) if days else None
 
 
