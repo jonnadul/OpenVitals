@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="VitalFrame — a self-hosted, open-source personal health-data framework. Ingest from any source, store locally, analyze, and render a private offline dashboard.">
+<title>VitalFrame — self-hosted personal health data</title>
+<style>
+:root{
+  --bg:#f2f2f7; --panel:#fff; --line:#e5e5ea; --text:#1c1c1e; --dim:#8e8e93;
+  --radius:18px; --shadow:0 1px 3px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.05);
+  --good:#34c759; --warn:#ff9500; --bad:#ff3b30; --accent:#007aff; --indigo:#5e5ce6; --purple:#af52de;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;font-weight:600;font-size:15px;transition:transform .12s ease,box-shadow .12s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(0,122,255,.35)}
+.btn-ghost{background:#fff;color:var(--text);box-shadow:var(--shadow);border:1px solid var(--line)}
+.btn svg{width:18px;height:18px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:rgba(242,242,247,.8);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
+.brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--indigo));display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,122,255,.35)}
+.brand .mark svg{width:18px;height:18px}
+.navlinks{display:flex;gap:22px;align-items:center;font-size:14px;color:var(--dim);font-weight:600}
+.navlinks a:hover{color:var(--text)}
+.navlinks .btn{padding:8px 14px;font-size:14px}
+
+/* hero */
+.hero{padding:64px 0 36px;text-align:center}
+.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.05;letter-spacing:-.025em;margin:18px 0 14px;font-weight:800}
+.hero h1 .grad{background:linear-gradient(120deg,var(--accent),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{max-width:620px;margin:0 auto;font-size:19px;color:var(--dim)}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0 30px}
+.badge{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--dim);box-shadow:var(--shadow)}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* mock dashboard preview */
+.preview{margin:36px auto 8px;max-width:920px;background:var(--panel);border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
+.preview .pv-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
+.preview .pv-head h3{margin:0;font-size:18px}
+.preview .pv-head .seg{display:inline-flex;background:#e9e9ee;border-radius:9px;padding:3px}
+.preview .pv-head .seg span{padding:4px 10px;border-radius:7px;font-size:12px;font-weight:600;color:var(--dim)}
+.preview .pv-head .seg span.on{background:#fff;box-shadow:var(--shadow);color:var(--text)}
+.pv-body{padding:20px 22px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tile{background:#fafafd;border:1px solid var(--line);border-radius:14px;padding:14px}
+.tile .l{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);font-weight:600}
+.tile .v{font-size:26px;font-weight:700;margin-top:4px}
+.tile .v small{font-size:13px;color:var(--dim);font-weight:500}
+.tile .spark{margin-top:8px;height:30px}
+.pv-chart{grid-column:1 / -1;background:#fafafd;border:1px solid var(--line);border-radius:14px;padding:14px}
+.pv-chart .cl{font-size:13px;color:var(--dim);font-weight:600;margin-bottom:6px}
+.pv-foot{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+.pill.g{background:rgba(52,199,89,.14);color:#248a3d}
+.pill.w{background:rgba(255,149,0,.16);color:#b86b00}
+.pill.i{background:rgba(0,122,255,.12);color:var(--accent)}
+
+/* sections */
+section.block{padding:54px 0}
+h2.s{font-size:clamp(26px,4vw,36px);letter-spacing:-.02em;margin:0 0 8px;font-weight:800}
+p.sub{color:var(--dim);font-size:17px;max-width:640px;margin:0 0 30px}
+
+/* value props */
+.props{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.prop{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.prop .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;margin-bottom:12px}
+.prop h4{margin:0 0 6px;font-size:16px}
+.prop p{margin:0;color:var(--dim);font-size:14px}
+
+/* features */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.feat h4{margin:0 0 6px;font-size:17px;display:flex;align-items:center;gap:9px}
+.feat p{margin:0;color:var(--dim);font-size:14px}
+.feat .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+
+/* quickstart */
+.qs{background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.qs .bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.qs .bar i{width:11px;height:11px;border-radius:50%}
+.qs pre{margin:0;padding:20px 22px;font:13.5px/1.7 "SF Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--text);overflow-x:auto;background:#0f1115;color:#e6e6ea}
+.qs pre .c{color:#7f8c98}
+.qs pre .p{color:#5ac8fa}
+.qs pre .a{color:#34c759}
+
+/* architecture */
+.arch{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center}
+.arch .node{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);min-width:150px;text-align:center;flex:1}
+.arch .node .t{font-weight:700;font-size:15px}
+.arch .node .s{color:var(--dim);font-size:12.5px;margin-top:3px}
+.arch .arr{display:grid;place-items:center;color:var(--dim);font-size:22px;padding:0 8px;font-weight:700}
+.arch .grp{background:linear-gradient(180deg,#fff,#f7f7fb);border:1px dashed var(--line);border-radius:16px;padding:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+
+/* sources */
+.srcs{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.src{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-weight:600;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow)}
+.src .d{width:8px;height:8px;border-radius:50%;background:var(--good)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);font-size:14px}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;align-items:center}
+.foot a{color:var(--dim);font-weight:600}
+.foot a:hover{color:var(--text)}
+.disclaimer{font-size:12.5px;margin-top:18px;line-height:1.5}
+
+@media(max-width:860px){
+  .props{grid-template-columns:repeat(2,1fr)} .feats{grid-template-columns:1fr}
+  .pv-body{grid-template-columns:repeat(2,1fr)} .arch{flex-direction:column} .arch .arr{transform:rotate(90deg);padding:4px}
+}
+@media(max-width:520px){
+  .props{grid-template-columns:1fr} .pv-body{grid-template-columns:1fr}
+  .navlinks a:not(.btn){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
+      VitalFrame
+    </div>
+    <div class="navlinks">
+      <a href="#features">Features</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#architecture">Architecture</a>
+      <a class="btn btn-primary" href="#quickstart">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <span class="eyebrow">Open source · Self-hosted · MIT</span>
+  <h1>Your health data.<br><span class="grad">Your machine. Your rules.</span></h1>
+  <p class="lead">VitalFrame is a personal health-data framework that unifies Apple Health, Oura, Yazio, Dexcom and more into one private, offline dashboard — no cloud, no tracking.</p>
+  <div class="badges">
+    <span class="badge">🏠 Local-first SQLite</span>
+    <span class="badge">🔌 Pluggable connectors</span>
+    <span class="badge">📊 Offline dashboard</span>
+    <span class="badge">⚙️ Config-driven</span>
+    <span class="badge">🐍 Pure Python</span>
+  </div>
+  <div class="cta">
+    <a class="btn btn-primary" href="#quickstart">Get started
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a class="btn btn-ghost" href="https://github.com/jonnadul/vitalframe">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12 11.5 11.5 0 0 0 8.4 23c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+
+  <!-- mock dashboard preview -->
+  <div class="preview" aria-hidden="true">
+    <div class="pv-head">
+      <h3>My Health</h3>
+      <div class="seg"><span class="on">30d</span><span>90d</span><span>All</span></div>
+    </div>
+    <div class="pv-body">
+      <div class="tile"><div class="l">Resting HR</div><div class="v">58 <small>bpm</small></div>
+        <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0,18 14,16 28,20 42,15 56,17 70,13 84,16 100,14" fill="none" stroke="#5e5ce6" stroke-width="2"/></svg></div>
+      <div class="tile"><div class="l">HRV</div><div class="v">62 <small>ms</small></div>
+        <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0,14 14,18 28,12 42,16 56,11 70,15 84,12 100,13" fill="none" stroke="#af52de" stroke-width="2"/></svg></div>
+      <div class="tile"><div class="l">Sleep</div><div class="v">7.4 <small>h</small></div>
+        <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0,12 14,10 28,14 42,9 56,13 70,10 84,12 100,9" fill="none" stroke="#007aff" stroke-width="2"/></svg></div>
+      <div class="tile"><div class="l">Steps</div><div class="v">9,240</div>
+        <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0,20 14,12 28,16 42,10 56,14 70,8 84,12 100,11" fill="none" stroke="#34c759" stroke-width="2"/></svg></div>
+      <div class="tile"><div class="l">Weight</div><div class="v">78.1 <small>kg</small></div>
+        <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0,15 14,16 28,14 42,15 56,13 70,14 84,13 100,14" fill="none" stroke="#ff9500" stroke-width="2"/></svg></div>
+      <div class="tile"><div class="l">Glucose</div><div class="v">104 <small>mg/dL</small></div>
+        <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0,16 14,14 28,20 42,12 56,18 70,13 84,17 100,15" fill="none" stroke="#ff9500" stroke-width="2"/></svg></div>
+      <div class="pv-chart">
+        <div class="cl">Glucose · mg/dL (target 70–180)</div>
+        <svg viewBox="0 0 600 150" preserveAspectRatio="none" style="width:100%;height:130px">
+          <rect x="0" y="55" width="600" height="55" fill="rgba(52,199,89,.10)"/>
+          <line x1="0" y1="110" x2="600" y2="110" stroke="#e5e5ea"/>
+          <line x1="0" y1="55" x2="600" y2="55" stroke="#e5e5ea" stroke-dasharray="3 3"/>
+          <polyline points="0,80 30,78 60,82 90,70 120,60 150,95 180,120 210,110 240,85 270,72 300,78 330,68 360,90 390,80 420,74 450,82 480,70 510,76 540,72 570,80 600,74" fill="none" stroke="#ff9500" stroke-width="2.2"/>
+          <text x="6" y="50" fill="#8e8e93" font-size="11">180</text>
+          <text x="6" y="115" fill="#8e8e93" font-size="11">70</text>
+        </svg>
+      </div>
+      <div class="pv-foot">
+        <span class="pill g">Time in range 92%</span>
+        <span class="pill i">Est. A1c 5.3%</span>
+        <span class="pill w">Fasting adherence 87%</span>
+        <span class="pill g">Metformin 95%</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="block wrap" id="why">
+  <h2 class="s">Why VitalFrame</h2>
+  <p class="sub">Most health dashboards lock your data in a vendor's cloud or show only one device. VitalFrame is built the opposite way.</p>
+  <div class="props">
+    <div class="prop"><div class="ic" style="background:rgba(0,122,255,.12)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+      <h4>Local-first</h4><p>Your data lives in a SQLite file you own. No accounts, no telemetry.</p></div>
+    <div class="prop"><div class="ic" style="background:rgba(94,92,230,.12)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5e5ce6" stroke-width="2" stroke-linecap="round"><path d="M9 7V4M15 7V4M9 20v-3M15 20v-3M5 10h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z"/></svg></div>
+      <h4>Source-agnostic</h4><p>A small connector interface normalizes any source into one model.</p></div>
+    <div class="prop"><div class="ic" style="background:rgba(52,199,89,.12)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v5c0 4 3 7 7 9 4-2 7-5 7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h4>Private by design</h4><p>The dashboard is one HTML file with zero external requests. Works offline.</p></div>
+    <div class="prop"><div class="ic" style="background:rgba(255,149,0,.12)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff9500" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
+      <h4>Configurable</h4><p>Metrics, fasting window, glucose bands and insight profiles are all config.</p></div>
+  </div>
+</section>
+
+<section class="block wrap" id="features">
+  <h2 class="s">What's inside</h2>
+  <p class="sub">Four stages, each with a clean contract — replace any part without touching the others.</p>
+  <div class="feats">
+    <div class="feat"><h4><span class="dot"></span>Connectors</h4><p>apple_health, oura, yazio, dexcom, and a synthetic demo. Add your own in ~30 lines.</p></div>
+    <div class="feat"><h4><span class="dot"></span>Storage</h4><p>Dependency-free SQLite store keyed by entity kind, with idempotent re-ingest.</p></div>
+    <div class="feat"><h4><span class="dot"></span>Analysis</h4><p>Pure-Python stats (no SciPy): trends, correlation with p-values, glucose, fasting, meds.</p></div>
+    <div class="feat"><h4><span class="dot"></span>Dashboard</h4><p>A self-contained offline HTML file — Apple Health-inspired light theme, window selector.</p></div>
+    <div class="feat"><h4><span class="dot"></span>Insight profiles</h4><p>Pluggable guidance layer. A diabetes + longevity sample ships as a configurable reference.</p></div>
+    <div class="feat"><h4><span class="dot"></span>CLI + Docker</h4><p>One binary for sample/ingest/build/analyze/serve, plus a Dockerfile for self-hosting.</p></div>
+  </div>
+</section>
+
+<section class="block wrap" id="quickstart">
+  <h2 class="s">Quick start</h2>
+  <p class="sub">Up and running in under a minute — with no private data. The sample config uses the synthetic connector.</p>
+  <div class="qs">
+    <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+    <pre><span class="c"># install</span>
+<span class="p">pip install -e .</span>
+
+<span class="c"># write a sample config (uses demo data)</span>
+<span class="p">vitalframe sample --output config.yaml</span>
+
+<span class="c"># build the offline dashboard</span>
+<span class="p">vitalframe build --config config.yaml --output dashboard.html</span>
+
+<span class="c"># …or run it live with auto-refresh</span>
+<span class="a">vitalframe serve --config config.yaml --port 8899</span></pre>
+  </div>
+</section>
+
+<section class="block wrap" id="architecture">
+  <h2 class="s">Architecture</h2>
+  <p class="sub">A linear pipeline with swappable parts at every stage.</p>
+  <div class="arch">
+    <div class="node"><div class="t">Connectors</div><div class="s">Apple Health · Oura · Yazio · Dexcom · your own</div></div>
+    <div class="arr">→</div>
+    <div class="node"><div class="t">HealthData</div><div class="s">one normalized model</div></div>
+    <div class="arr">→</div>
+    <div class="grp">
+      <div class="node" style="min-width:130px"><div class="t">SQLite store</div><div class="s">local, private</div></div>
+    </div>
+    <div class="arr">→</div>
+    <div class="node"><div class="t">Analysis</div><div class="s">trends · glucose · fasting · profiles</div></div>
+    <div class="arr">→</div>
+    <div class="node"><div class="t">Dashboard</div><div class="s">one offline HTML file</div></div>
+  </div>
+</section>
+
+<section class="block wrap">
+  <h2 class="s">Supported sources</h2>
+  <p class="sub">Bring any source — if it can export JSON/CSV, there's a connector for it.</p>
+  <div class="srcs">
+    <div class="src"><span class="d"></span>Apple Health (Health Auto Export)</div>
+    <div class="src"><span class="d"></span>Oura</div>
+    <div class="src"><span class="d"></span>Yazio</div>
+    <div class="src"><span class="d"></span>Dexcom / CGM</div>
+    <div class="src"><span class="d"></span>Synthetic (demo)</div>
+    <div class="src"><span class="d"></span>Your connector</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="brand" style="font-size:16px">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
+        VitalFrame
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <a href="https://github.com/jonnadul/vitalframe">GitHub</a>
+        <a href="#quickstart">Documentation</a>
+        <a href="#features">Features</a>
+        <span>MIT License</span>
+      </div>
+    </div>
+    <p class="disclaimer">⚠️ VitalFrame is a data tool, not a medical device. Insights are heuristic and not medical advice, diagnosis, or treatment. Consult a qualified clinician for health decisions. The dashboard embeds your health data inline — treat the file as sensitive.</p>
+  </div>
+</footer>
+</body>
+</html>
