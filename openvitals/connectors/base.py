@@ -1,4 +1,4 @@
-"""Source connector framework for VitalFrame.
+"""Source connector framework for OpenVitals.
 
 A connector is anything that produces a :class:`HealthData` from some external
 source. Connectors are selected by ``type`` in the config and instantiated via
@@ -60,14 +60,14 @@ def register_connector(key: str, cls: Type[SourceConnector]) -> None:
 def get_connector(cfg: SourceConfig) -> SourceConnector:
     """Instantiate the connector named by ``cfg.type``.
 
-    Falls back to plugin import ``vitalframe.connectors.<type>`` if not already
+    Falls back to plugin import ``openvitals.connectors.<type>`` if not already
     registered (so new connector modules self-register on import).
     """
     if cfg.type in _REGISTRY:
         return _REGISTRY[cfg.type](cfg)
     # try lazy import of the matching module
     try:
-        mod = importlib.import_module(f"vitalframe.connectors.{cfg.type}")
+        mod = importlib.import_module(f"openvitals.connectors.{cfg.type}")
         # module should register on import
         if cfg.type in _REGISTRY:
             return _REGISTRY[cfg.type](cfg)

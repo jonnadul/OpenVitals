@@ -1,6 +1,6 @@
 """Synthetic data connector.
 
-Generates a deterministic, realistic-looking :class:`HealthData` so VitalFrame
+Generates a deterministic, realistic-looking :class:`HealthData` so OpenVitals
 runs end-to-end with zero private data and zero network. Used by the sample
 config, the test-suite, and the quickstart. Never used to produce real insights.
 """

@@ -33,10 +33,10 @@ exists for direct Dexcom exports / the Dexcom API export.
 Subclass `SourceConnector`, set `type_key`, implement `fetch()`, and register it.
 
 ```python
-# vitalframe/connectors/myfitbit.py
-from vitalframe.connectors import SourceConnector, register_connector
-from vitalframe.models import HealthData, Observation
-from vitalframe.types import day_of
+# openvitals/connectors/myfitbit.py
+from openvitals.connectors import SourceConnector, register_connector
+from openvitals.models import HealthData, Observation
+from openvitals.types import day_of
 
 class MyFitbitConnector(SourceConnector):
     type_key = "myfitbit"
@@ -61,6 +61,6 @@ sources:
     params: { token: "${FITBIT_TOKEN}" }
 ```
 
-Connectors are auto-discovered by importing their module; `vitalframe.connectors`
+Connectors are auto-discovered by importing their module; `openvitals.connectors`
 imports all built-ins on startup. A custom connector in your own package just needs
 to be imported once (e.g. in your entrypoint) so `register` runs.

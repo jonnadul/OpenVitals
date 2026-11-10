@@ -1,4 +1,4 @@
-"""Entry point: ``python -m vitalframe``."""
+"""Entry point: ``python -m openvitals``."""
 
 from .cli import main
 

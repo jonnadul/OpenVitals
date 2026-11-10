@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="VitalFrame — a self-hosted, open-source personal health-data framework. Ingest from any source, store locally, analyze, and render a private offline dashboard.">
-<title>VitalFrame — self-hosted personal health data</title>
+<meta name="description" content="OpenVitals — a self-hosted, open-source personal health-data framework. Ingest from any source, store locally, analyze, and render a private offline dashboard.">
+<title>OpenVitals — self-hosted personal health data</title>
 <style>
 :root{
   --bg:#f2f2f7; --panel:#fff; --line:#e5e5ea; --text:#1c1c1e; --dim:#8e8e93;
@@ -127,7 +127,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);fon
   <div class="wrap nav">
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
-      VitalFrame
+      OpenVitals
     </div>
     <div class="navlinks">
       <a href="#features">Features</a>
@@ -141,7 +141,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);fon
 <header class="hero wrap">
   <span class="eyebrow">Open source · Self-hosted · MIT</span>
   <h1>Your health data.<br><span class="grad">Your machine. Your rules.</span></h1>
-  <p class="lead">VitalFrame is a personal health-data framework that unifies Apple Health, Oura, Yazio, Dexcom and more into one private, offline dashboard — no cloud, no tracking.</p>
+  <p class="lead">OpenVitals is a personal health-data framework that unifies Apple Health, Oura, Yazio, Dexcom and more into one private, offline dashboard — no cloud, no tracking.</p>
   <div class="badges">
     <span class="badge">🏠 Local-first SQLite</span>
     <span class="badge">🔌 Pluggable connectors</span>
@@ -153,7 +153,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);fon
     <a class="btn btn-primary" href="#quickstart">Get started
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
-    <a class="btn btn-ghost" href="https://github.com/jonnadul/vitalframe">
+    <a class="btn btn-ghost" href="https://github.com/jonnadul/openvitals">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12 11.5 11.5 0 0 0 8.4 23c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
       View on GitHub
     </a>
@@ -200,8 +200,8 @@ footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);fon
 </header>
 
 <section class="block wrap" id="why">
-  <h2 class="s">Why VitalFrame</h2>
-  <p class="sub">Most health dashboards lock your data in a vendor's cloud or show only one device. VitalFrame is built the opposite way.</p>
+  <h2 class="s">Why OpenVitals</h2>
+  <p class="sub">Most health dashboards lock your data in a vendor's cloud or show only one device. OpenVitals is built the opposite way.</p>
   <div class="props">
     <div class="prop"><div class="ic" style="background:rgba(0,122,255,.12)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
@@ -240,13 +240,13 @@ footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);fon
 <span class="p">pip install -e .</span>
 
 <span class="c"># write a sample config (uses demo data)</span>
-<span class="p">vitalframe sample --output config.yaml</span>
+<span class="p">openvitals sample --output config.yaml</span>
 
 <span class="c"># build the offline dashboard</span>
-<span class="p">vitalframe build --config config.yaml --output dashboard.html</span>
+<span class="p">openvitals build --config config.yaml --output dashboard.html</span>
 
 <span class="c"># …or run it live with auto-refresh</span>
-<span class="a">vitalframe serve --config config.yaml --port 8899</span></pre>
+<span class="a">openvitals serve --config config.yaml --port 8899</span></pre>
   </div>
 </section>
 
@@ -286,16 +286,16 @@ footer{border-top:1px solid var(--line);padding:34px 0 50px;color:var(--dim);fon
     <div class="foot">
       <div class="brand" style="font-size:16px">
         <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
-        VitalFrame
+        OpenVitals
       </div>
       <div style="display:flex;gap:20px;flex-wrap:wrap">
-        <a href="https://github.com/jonnadul/vitalframe">GitHub</a>
+        <a href="https://github.com/jonnadul/openvitals">GitHub</a>
         <a href="#quickstart">Documentation</a>
         <a href="#features">Features</a>
         <span>MIT License</span>
       </div>
     </div>
-    <p class="disclaimer">⚠️ VitalFrame is a data tool, not a medical device. Insights are heuristic and not medical advice, diagnosis, or treatment. Consult a qualified clinician for health decisions. The dashboard embeds your health data inline — treat the file as sensitive.</p>
+    <p class="disclaimer">⚠️ OpenVitals is a data tool, not a medical device. Insights are heuristic and not medical advice, diagnosis, or treatment. Consult a qualified clinician for health decisions. The dashboard embeds your health data inline — treat the file as sensitive.</p>
   </div>
 </footer>
 </body>

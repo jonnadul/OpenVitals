@@ -1,4 +1,4 @@
-"""SQLite-backed local store for VitalFrame.
+"""SQLite-backed local store for OpenVitals.
 
 The store is the canonical local copy of normalized health data. Connectors
 write into it; analysis and the dashboard read from it (or from an in-memory
@@ -46,7 +46,7 @@ def _from_iso(s: str) -> datetime:
 class Store:
     """A small, dependency-free SQLite store for normalized health records."""
 
-    def __init__(self, path: str = "data/vitalframe.db") -> None:
+    def __init__(self, path: str = "data/openvitals.db") -> None:
         self.path = path
         self._conn = sqlite3.connect(path)
         self._conn.execute("PRAGMA journal_mode=WAL")
@@ -157,7 +157,7 @@ class Store:
             "SELECT name,scheduled_day,status,taken_at,source FROM medications"
         ):
             data.medications.append(
-                Medication(name=r[0], scheduled_day=date.fromisoformat(r[1]), status=__import__("vitalframe.types", fromlist=["MedicationStatus"]).MedicationStatus(r[2]),
+                Medication(name=r[0], scheduled_day=date.fromisoformat(r[1]), status=__import__("openvitals.types", fromlist=["MedicationStatus"]).MedicationStatus(r[2]),
                            taken_at=_from_iso(r[3]) if r[3] else None, source=r[4])
             )
 

@@ -1,6 +1,6 @@
 """Tests for the pure-Python statistics helpers."""
 
-from vitalframe.analysis.correlation import pearson, pearson_pvalue, slope, mean, median
+from openvitals.analysis.correlation import pearson, pearson_pvalue, slope, mean, median
 
 
 def test_pearson_perfect_positive():

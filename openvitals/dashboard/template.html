@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>VitalFrame</title>
+<title>OpenVitals</title>
 <style>
 :root{
   --bg:#f2f2f7; --panel:#ffffff; --line:#e5e5ea; --text:#1c1c1e; --dim:#8e8e93;
@@ -67,7 +67,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;margin-top:30px}
 <body>
 <div class="wrap">
   <header>
-    <h1 id="title">VitalFrame</h1>
+    <h1 id="title">OpenVitals</h1>
     <span class="sub" id="sub"></span>
   </header>
   <div class="controls">
@@ -82,7 +82,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;margin-top:30px}
 
   <div id="panels"></div>
 
-  <footer>VitalFrame — local, private, offline. Not medical advice.</footer>
+  <footer>OpenVitals — local, private, offline. Not medical advice.</footer>
 </div>
 
 <script>
@@ -276,7 +276,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;margin-top:30px}
   function renderAll(){ renderWin(); renderMetrics(); renderTabs(); renderPanels(); }
 
   // boot
-  $("#title").textContent = M.title||"VitalFrame";
+  $("#title").textContent = M.title||"OpenVitals";
   $("#sub").textContent = "as of "+M.as_of+" · "+ (M.counts?Object.values(M.counts).reduce((a,b)=>a+b,0):0) + " records";
   $("#srcs").textContent = (M.sources&&M.sources.length)?("sources: "+M.sources.join(", ")):"";
   renderAll();

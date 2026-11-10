@@ -8,7 +8,7 @@ dist/
 .venv/
 venv/
 
-# VitalFrame runtime data — NEVER commit real health data or secrets
+# OpenVitals runtime data — NEVER commit real health data or secrets
 data/
 *.db
 *.db-wal
@@ -34,4 +34,7 @@ credentials.json
 .idea/
 
 # Generated dashboard output (optional to commit a sample)
-vitalframe/dashboard/_rendered/
+openvitals/dashboard/_rendered/
+
+# Ephemeral lock from `uv run`
+uv.lock

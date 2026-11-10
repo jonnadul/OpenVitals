@@ -1,4 +1,4 @@
-"""Dashboard package for VitalFrame."""
+"""Dashboard package for OpenVitals."""
 
 from .render import render, verify_self_contained
 

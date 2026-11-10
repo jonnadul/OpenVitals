@@ -1,7 +1,7 @@
 # Dashboard
 
 The dashboard is a **single, self-contained HTML file** — no server, no CDN, no
-external requests. `vitalframe.dashboard.render(dataset, out_path)` embeds the full
+external requests. `openvitals.dashboard.render(dataset, out_path)` embeds the full
 dataset as inline JSON and renders it with vanilla JS.
 
 ## What's on the page
@@ -38,7 +38,7 @@ instead.
 Open the file directly, or serve it with any static host. For live refresh:
 
 ```bash
-vitalframe serve --config config.yaml --port 8899
+openvitals serve --config config.yaml --port 8899
 ```
 
 `serve` builds the page once, serves it, and rebuilds on a timer (default 300s) so it

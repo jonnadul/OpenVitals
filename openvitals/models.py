@@ -1,4 +1,4 @@
-"""Core data model for VitalFrame.
+"""Core data model for OpenVitals.
 
 Every source connector normalizes external data into these plain dataclasses.
 The storage layer, analysis modules, and dashboard renderer all consume

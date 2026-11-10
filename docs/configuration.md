@@ -1,7 +1,7 @@
 # Configuration
 
-VitalFrame is configured with a single YAML (or JSON) file. Loaded via
-`vitalframe sample` (writes a starting point) or `VITALFRAME_CONFIG=/path/config.yaml`.
+OpenVitals is configured with a single YAML (or JSON) file. Loaded via
+`openvitals sample` (writes a starting point) or `VITALFRAME_CONFIG=/path/config.yaml`.
 
 Top-level keys: `storage`, `sources`, `dashboard`, `analysis`.
 
@@ -9,7 +9,7 @@ Top-level keys: `storage`, `sources`, `dashboard`, `analysis`.
 
 ```yaml
 storage:
-  path: data/vitalframe.db   # any path; created on first ingest
+  path: data/openvitals.db   # any path; created on first ingest
 ```
 
 ## `sources`

@@ -1,6 +1,6 @@
 """Dexcom CGM connector — reads a Dexcom data export.
 
-In practice, most Dexcom G7 users get their glucose into VitalFrame via
+In practice, most Dexcom G7 users get their glucose into OpenVitals via
 **Apple Health** (Dexcom → Apple Health → the ``apple_health`` connector's
 ``blood_glucose`` metric). This connector exists for the direct-export path:
 a CSV or JSON export from Dexcom Clarity / the Dexcom API.

@@ -2,9 +2,9 @@
 
 import json
 
-from vitalframe.connectors.apple_health import parse_payload, iter_payloads_from_path
-from vitalframe.connectors.dexcom import DexcomConnector
-from vitalframe.config import SourceConfig
+from openvitals.connectors.apple_health import parse_payload, iter_payloads_from_path
+from openvitals.connectors.dexcom import DexcomConnector
+from openvitals.config import SourceConfig
 
 
 def test_hae_payload_parse():

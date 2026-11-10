@@ -1,9 +1,9 @@
-# VitalFrame sample configuration
+# OpenVitals sample configuration
 # Copy to config.yaml and edit. Secrets belong here or in environment variables,
 # NEVER in source control. See docs/configuration.md for the full schema.
 
 storage:
-  path: data/vitalframe.db
+  path: data/openvitals.db
 
 sources:
   # Demo data — no network, no private data. Remove for production.

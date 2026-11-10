@@ -1,4 +1,4 @@
-"""Storage package for VitalFrame."""
+"""Storage package for OpenVitals."""
 
 from .store import Store
 

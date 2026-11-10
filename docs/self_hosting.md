@@ -1,20 +1,20 @@
 # Self-hosting
 
-VitalFrame runs entirely locally. Two options.
+OpenVitals runs entirely locally. Two options.
 
 ## Option A — Python (any machine)
 
 ```bash
 pip install -e ".[server]"
-vitalframe sample --output config.yaml
+openvitals sample --output config.yaml
 # edit config.yaml to add your real sources
-vitalframe ingest --config config.yaml     # populate the store
-vitalframe serve --config config.yaml --port 8899
+openvitals ingest --config config.yaml     # populate the store
+openvitals serve --config config.yaml --port 8899
 # open http://localhost:8899/
 ```
 
 `serve` builds and serves the dashboard, rebuilding it on a timer. The dashboard
-itself is a static file, so you can also `vitalframe build` and serve `dashboard.html`
+itself is a static file, so you can also `openvitals build` and serve `dashboard.html`
 with nginx, Caddy, or any static host behind your own auth/reverse proxy.
 
 ## Option B — Docker
@@ -31,7 +31,7 @@ it; the container reads `config.yaml` by default.
 ```yaml
 # docker-compose.yml (excerpt)
 services:
-  vitalframe:
+  openvitals:
     build: .
     ports: ["8899:8899"]
     volumes:

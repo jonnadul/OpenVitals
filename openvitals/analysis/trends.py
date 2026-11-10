@@ -1,4 +1,4 @@
-"""Time-series helpers for VitalFrame analysis."""
+"""Time-series helpers for OpenVitals analysis."""
 
 from __future__ import annotations
 

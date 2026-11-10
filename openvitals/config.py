@@ -1,4 +1,4 @@
-"""Configuration for VitalFrame.
+"""Configuration for OpenVitals.
 
 A config is a plain mapping (loaded from YAML/JSON) describing:
 - ``storage`` — where data lives (SQLite path)
@@ -46,11 +46,11 @@ class SourceConfig:
 
 @dataclass
 class StorageConfig:
-    path: str = "data/vitalframe.db"
+    path: str = "data/openvitals.db"
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "StorageConfig":
-        return cls(path=d.get("path", "data/vitalframe.db"))
+        return cls(path=d.get("path", "data/openvitals.db"))
 
 
 @dataclass
@@ -67,7 +67,7 @@ class MetricDisplay:
 
 @dataclass
 class DashboardConfig:
-    title: str = "VitalFrame"
+    title: str = "OpenVitals"
     windows: List[int] = field(default_factory=lambda: [7, 14, 30, 90, 365, 0])
     default_window: int = 30
     metrics: List[MetricDisplay] = field(default_factory=list)
@@ -90,7 +90,7 @@ class DashboardConfig:
     def from_dict(cls, d: Dict[str, Any]) -> "DashboardConfig":
         metrics = [MetricDisplay(**m) for m in d.get("metrics", [])]
         return cls(
-            title=d.get("title", "VitalFrame"),
+            title=d.get("title", "OpenVitals"),
             windows=d.get("windows", [7, 14, 30, 90, 365, 0]),
             default_window=d.get("default_window", 30),
             metrics=metrics,
@@ -168,7 +168,7 @@ def load_config(path: Optional[str] = None) -> Config:
 def default_config_dict() -> Dict[str, Any]:
     """A representative default config (used by the sample generator + docs)."""
     return {
-        "storage": {"path": "data/vitalframe.db"},
+        "storage": {"path": "data/openvitals.db"},
         "sources": [
             {"type": "synthetic", "name": "demo", "params": {"days": 120, "seed": 7}}
         ],

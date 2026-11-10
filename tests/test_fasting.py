@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from vitalframe.models import Meal
-from vitalframe.analysis.fasting import compute_fasting
+from openvitals.models import Meal
+from openvitals.analysis.fasting import compute_fasting
 
 
 def _meal(hour, text="lunch: salad"):

@@ -1,4 +1,4 @@
-"""Command-line interface for VitalFrame."""
+"""Command-line interface for OpenVitals."""
 
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ def _counts(data) -> dict:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="vitalframe", description="Self-hosted personal health-data framework.")
+    p = argparse.ArgumentParser(prog="openvitals", description="Self-hosted personal health-data framework.")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("sample", help="Write a sample config file.")
@@ -93,7 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("build", help="Build the offline dashboard HTML.")
     s.add_argument("--config", default=None)
-    s.add_argument("--output", default="data/vitalframe_dashboard.html")
+    s.add_argument("--output", default="data/openvitals_dashboard.html")
     s.set_defaults(func=cmd_build)
 
     s = sub.add_parser("analyze", help="Print a text analysis summary.")

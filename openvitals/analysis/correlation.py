@@ -1,4 +1,4 @@
-"""Statistical helpers for VitalFrame analysis (pure-Python, no SciPy)."""
+"""Statistical helpers for OpenVitals analysis (pure-Python, no SciPy)."""
 
 from __future__ import annotations
 

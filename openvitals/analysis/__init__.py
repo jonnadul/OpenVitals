@@ -1,4 +1,4 @@
-"""Analysis package for VitalFrame."""
+"""Analysis package for OpenVitals."""
 
 from .build_dataset import build_dataset
 from .insights import (

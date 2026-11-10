@@ -1,4 +1,4 @@
-"""Shared enums and constants for VitalFrame.
+"""Shared enums and constants for OpenVitals.
 
 Unit conventions (internal canonical form):
 - glucose: mg/dL

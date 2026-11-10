@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from vitalframe.models import GlucoseReading
-from vitalframe.analysis.glucose import glucose_metrics
+from openvitals.models import GlucoseReading
+from openvitals.analysis.glucose import glucose_metrics
 
 
 def _g(v, day="2026-01-01"):

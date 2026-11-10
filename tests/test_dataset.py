@@ -4,10 +4,10 @@ import json
 import os
 import tempfile
 
-from vitalframe.config import Config, SourceConfig
-from vitalframe.connectors.synthetic import SyntheticConnector
-from vitalframe.analysis.build_dataset import build_dataset
-from vitalframe.dashboard import render, verify_self_contained
+from openvitals.config import Config, SourceConfig
+from openvitals.connectors.synthetic import SyntheticConnector
+from openvitals.analysis.build_dataset import build_dataset
+from openvitals.dashboard import render, verify_self_contained
 
 
 def _config():

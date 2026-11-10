@@ -1,4 +1,4 @@
-"""VitalFrame — a self-hosted personal health-data framework.
+"""OpenVitals — a self-hosted personal health-data framework.
 
 Ingest from any source, store locally, analyze, and render a private offline
 dashboard. See ``README.md`` and ``docs/`` for usage.

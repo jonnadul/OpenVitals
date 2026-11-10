@@ -1,4 +1,4 @@
-"""SQLite schema for VitalFrame's local store."""
+"""SQLite schema for OpenVitals's local store."""
 
 from __future__ import annotations
 

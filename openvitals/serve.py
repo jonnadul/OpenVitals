@@ -4,7 +4,7 @@ Serves the rendered, self-contained dashboard HTML. On startup it builds the
 page from the local store; a background thread rebuilds it when any source file
 changes (or on a timer), so the page stays fresh without rebuilding per request.
 
-Run: ``vitalframe serve --config config.yaml --port 8899``
+Run: ``openvitals serve --config config.yaml --port 8899``
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ def _build_once(config: Config, out_path: str) -> None:
 def serve(config_path: str, host: str = "0.0.0.0", port: int = 8899,
           rebuild_seconds: int = 300, build_dir: str = "data") -> None:
     os.makedirs(build_dir, exist_ok=True)
-    out_path = os.path.join(build_dir, "vitalframe_dashboard.html")
+    out_path = os.path.join(build_dir, "openvitals_dashboard.html")
     cfg = load_config(config_path)
 
     # initial build (offline-safe: if network sources fail, synthetic/local still render)
@@ -82,7 +82,7 @@ def serve(config_path: str, host: str = "0.0.0.0", port: int = 8899,
             pass
 
     httpd = ThreadingHTTPServer((host, port), Handler)
-    print(f"VitalFrame dashboard serving at http://{host}:{port}/  (Ctrl+C to stop)")
+    print(f"OpenVitals dashboard serving at http://{host}:{port}/  (Ctrl+C to stop)")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

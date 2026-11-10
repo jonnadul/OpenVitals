@@ -1,7 +1,7 @@
 """Oura (Ring) connector — Oura v2 REST API.
 
 Fetches sleep, readiness, and activity summaries and maps them into the
-VitalFrame model. Requires a personal access token (``params.token`` or the
+OpenVitals model. Requires a personal access token (``params.token`` or the
 ``OURA_TOKEN`` environment variable). Token: https://cloud.ouraring.com/personal-access-tokens
 
 Reference endpoints used (v2 ``/usercollection``):

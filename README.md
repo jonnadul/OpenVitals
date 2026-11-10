@@ -1,4 +1,4 @@
-# VitalFrame
+# OpenVitals
 
 **A self-hosted, open-source personal health-data framework.**
 
@@ -6,7 +6,7 @@ Ingest health data from *any* source, store it locally in a private SQLite store
 analyze it (trends, correlations, glucose, fasting, medications), and render a
 **fully offline, self-contained dashboard** — no cloud, no CDN, no tracking.
 
-> ⚠️ VitalFrame is a data tool, not a medical device. Insights are heuristic and
+> ⚠️ OpenVitals is a data tool, not a medical device. Insights are heuristic and
 > not medical advice. Nothing here diagnoses or treats any condition.
 
 ---
@@ -14,7 +14,7 @@ analyze it (trends, correlations, glucose, fasting, medications), and render a
 ## Why
 
 Most health dashboards lock your data in a vendor's cloud or only show one
-device's view. VitalFrame is:
+device's view. OpenVitals is:
 
 - **Local-first** — your data lives in a SQLite file you control.
 - **Source-agnostic** — a small connector interface normalizes any source
@@ -28,15 +28,15 @@ device's view. VitalFrame is:
 
 ```bash
 pip install -e .
-vitalframe sample --output config.yaml      # writes a sample config (uses demo data)
-vitalframe build --config config.yaml --output dashboard.html
+openvitals sample --output config.yaml      # writes a sample config (uses demo data)
+openvitals build --config config.yaml --output dashboard.html
 # open dashboard.html in a browser
 ```
 
 Or run it live with auto-refresh:
 
 ```bash
-vitalframe serve --config config.yaml --port 8899
+openvitals serve --config config.yaml --port 8899
 # open http://localhost:8899/
 ```
 
@@ -64,13 +64,13 @@ editing `config.yaml` (see [docs/configuration.md](docs/configuration.md)).
                                                   dashboard.html
 ```
 
-- **Connectors** (`vitalframe/connectors/`) — each turns one external source into
+- **Connectors** (`openvitals/connectors/`) — each turns one external source into
   the shared `HealthData` model. Add your own by subclassing `SourceConnector`.
-- **Storage** (`vitalframe/storage/`) — a dependency-free SQLite store keyed by
+- **Storage** (`openvitals/storage/`) — a dependency-free SQLite store keyed by
   entity kind (observations, workouts, sleep, meals, glucose, nutrition, meds).
-- **Analysis** (`vitalframe/analysis/`) — pure-Python stats (no SciPy needed) plus
+- **Analysis** (`openvitals/analysis/`) — pure-Python stats (no SciPy needed) plus
   domain modules (glucose, fasting, medications) and a pluggable **insight profile**.
-- **Dashboard** (`vitalframe/dashboard/`) — renders `build_dataset()` output into a
+- **Dashboard** (`openvitals/dashboard/`) — renders `build_dataset()` output into a
   single offline HTML file (Apple Health-inspired light theme).
 
 See [docs/architecture.md](docs/architecture.md) for details.
@@ -94,7 +94,7 @@ Everything is config-driven. A minimal config:
 
 ```yaml
 storage:
-  path: data/vitalframe.db
+  path: data/openvitals.db
 sources:
   - type: apple_health
     params:
@@ -134,7 +134,7 @@ pytest tests -q
 
 ## Disclaimer
 
-VitalFrame is provided for personal health-data exploration. It is not a medical
+OpenVitals is provided for personal health-data exploration. It is not a medical
 device and does not provide medical advice, diagnosis, or treatment. Consult a
 qualified clinician for health decisions.
 
