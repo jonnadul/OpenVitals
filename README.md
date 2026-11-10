@@ -2,6 +2,8 @@
 
 **A self-hosted, open-source personal health-data framework.**
 
+> 🌐 **Website:** https://jonnadul.github.io/openvitals/  ·  📦 **Package:** `pip install openvitals`
+
 Ingest health data from *any* source, store it locally in a private SQLite store,
 analyze it (trends, correlations, glucose, fasting, medications), and render a
 **fully offline, self-contained dashboard** — no cloud, no CDN, no tracking.
